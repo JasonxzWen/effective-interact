@@ -58,6 +58,7 @@ const codexPlugin = readJson(".codex-plugin/plugin.json");
 const claudePlugin = readJson(".claude-plugin/plugin.json");
 const marketplace = readJson(".claude-plugin/marketplace.json");
 const skillMarkdown = readText("skills/effective-interact/SKILL.md");
+const licenseText = readText("LICENSE");
 const frontmatter = parseFrontmatter(skillMarkdown);
 
 if (!frontmatter) {
@@ -65,9 +66,14 @@ if (!frontmatter) {
 } else {
   if (frontmatter.name !== skillName) fail(`SKILL.md name must be ${skillName}`);
   if (!frontmatter.description) fail("SKILL.md description is required");
+  if (frontmatter.license !== "Apache-2.0") fail("SKILL.md license must be Apache-2.0");
   if ((frontmatter.description ?? "").length > 1024) {
     fail("SKILL.md description must be 1024 characters or less");
   }
+}
+
+if (!licenseText.includes("Apache License") || !licenseText.includes("Version 2.0")) {
+  fail("LICENSE must contain Apache License 2.0 text");
 }
 
 for (const [label, manifest] of [
@@ -78,6 +84,11 @@ for (const [label, manifest] of [
   if (manifest.name !== skillName) fail(`${label} name must be ${skillName}`);
   if (manifest.skills !== "./skills/") fail(`${label} skills must be ./skills/`);
   if (!manifest.description) fail(`${label} description is required`);
+  if (manifest.license !== "Apache-2.0") fail(`${label} license must be Apache-2.0`);
+}
+
+if (packageJson && packageJson.license !== "Apache-2.0") {
+  fail("package.json license must be Apache-2.0");
 }
 
 if (packageJson && codexPlugin && packageJson.version !== codexPlugin.version) {
@@ -103,6 +114,7 @@ if (marketplace) {
     if (packageJson && entry.version !== packageJson.version) {
       fail("Claude marketplace plugin version must match package.json");
     }
+    if (entry.license !== "Apache-2.0") fail("Claude marketplace plugin license must be Apache-2.0");
     if (entry.source?.source !== "github") fail("Claude marketplace source must be github");
     if (entry.source?.repo !== "JasonxzWen/effective-interact") {
       fail("Claude marketplace repo must be JasonxzWen/effective-interact");

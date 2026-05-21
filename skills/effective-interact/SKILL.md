@@ -1,6 +1,7 @@
 ---
 name: effective-interact
 description: Load when Chinese-first clear complex communication, alignment, multi-option choice, status/incident reporting, long-task fact ledgers, implementation plans, reviews, architecture/dependency/milestone maps, explainer/design/editor artifacts, or handoff needs first-principles structure; choose plain text, Markdown, visual Markdown, or HTML by decision cost; do not load merely because an answer is long; skip trivial chat, production UI, decks, bundled apps.
+license: Apache-2.0
 ---
 
 # Effective Interact

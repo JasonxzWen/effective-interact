@@ -33,6 +33,7 @@
 2. 版本检查
    - `package.json`、`.codex-plugin/plugin.json`、`.claude-plugin/plugin.json`、`.claude-plugin/marketplace.json` 使用同一个版本。
    - 如果 Claude Code marketplace entry 或 plugin manifest 设置了 `version`，后续发布必须同步 bump；否则用户可能不会收到更新。
+   - `LICENSE`、`package.json`、plugin manifests、marketplace entry 和 `SKILL.md` frontmatter 均声明 `Apache-2.0`。
 
 3. 安装检查
    - Codex：从 `skills/effective-interact/` 安装或复制到 `$CODEX_HOME/skills/effective-interact`。

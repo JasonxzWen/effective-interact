@@ -54,3 +54,7 @@ claude plugin validate .claude-plugin\plugin.json
 ```
 
 `claude plugin validate` requires a Claude Code version with plugin validation support. Newer Claude Code versions may also support `--strict`.
+
+## License
+
+Apache-2.0. See [LICENSE](LICENSE).
