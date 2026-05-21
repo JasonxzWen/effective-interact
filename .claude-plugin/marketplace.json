@@ -1,0 +1,42 @@
+{
+  "name": "effective-interact",
+  "owner": {
+    "name": "JasonxzWen",
+    "url": "https://github.com/JasonxzWen"
+  },
+  "metadata": {
+    "description": "Marketplace catalog for the Effective Interact Claude Code plugin."
+  },
+  "plugins": [
+    {
+      "name": "effective-interact",
+      "version": "0.1.0",
+      "description": "Chinese-first complex communication skill for plans, reviews, status reports, architecture maps, decision matrices, handoffs, and optional HTML artifacts.",
+      "author": {
+        "name": "JasonxzWen",
+        "url": "https://github.com/JasonxzWen"
+      },
+      "homepage": "https://github.com/JasonxzWen/effective-interact",
+      "repository": "https://github.com/JasonxzWen/effective-interact",
+      "keywords": [
+        "skill",
+        "communication",
+        "decision-support",
+        "handoff",
+        "html-artifact"
+      ],
+      "category": "Productivity",
+      "tags": [
+        "skill",
+        "communication",
+        "chinese",
+        "html-artifact"
+      ],
+      "source": {
+        "source": "github",
+        "repo": "JasonxzWen/effective-interact",
+        "ref": "main"
+      }
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "name": "effective-interact",
+  "version": "0.1.0",
+  "description": "Chinese-first complex communication skill for plans, reviews, status reports, architecture maps, decision matrices, handoffs, and optional HTML artifacts.",
+  "author": {
+    "name": "JasonxzWen",
+    "url": "https://github.com/JasonxzWen"
+  },
+  "homepage": "https://github.com/JasonxzWen/effective-interact",
+  "repository": "https://github.com/JasonxzWen/effective-interact",
+  "keywords": [
+    "skill",
+    "communication",
+    "decision-support",
+    "handoff",
+    "html-artifact"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Effective Interact",
+    "shortDescription": "Structure complex communication and handoffs",
+    "longDescription": "Effective Interact helps Codex choose the lightest useful output form for complex communication: concise text, structured Markdown, visual Markdown, or a static HTML artifact when interaction lowers decision cost.",
+    "developerName": "JasonxzWen",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/JasonxzWen/effective-interact",
+    "defaultPrompt": [
+      "Use $effective-interact to structure a complex decision, plan, review, or handoff."
+    ],
+    "brandColor": "#2563EB",
+    "screenshots": []
+  }
+}

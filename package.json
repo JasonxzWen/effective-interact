@@ -1,0 +1,13 @@
+{
+  "name": "effective-interact",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Chinese-first Agent Skill for complex communication and handoffs.",
+  "scripts": {
+    "validate:release": "node scripts/check-release.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
