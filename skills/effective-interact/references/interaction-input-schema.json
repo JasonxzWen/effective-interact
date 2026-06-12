@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://skill-hub.local/effective-interact/interaction-input-schema.json",
+  "$id": "https://harness-hub.local/effective-interact/interaction-input-schema.json",
   "title": "Effective Interact Input",
   "type": "object",
   "additionalProperties": false,
@@ -30,13 +30,28 @@
     "renderMode": {
       "type": "string",
       "enum": ["runtime-cdn", "pre-rendered", "fallback-only", "runtime"],
-      "default": "runtime-cdn",
-      "description": "`runtime` is a legacy alias accepted by the generator and normalized to `runtime-cdn`."
+      "default": "pre-rendered",
+      "description": "`runtime` is a legacy alias accepted by the generator and normalized to `runtime-cdn`. Use `runtime-cdn` only when browser-required validation is available."
     },
     "showRuntimeDependencies": {
       "type": "boolean",
       "default": false,
       "description": "When true, expose the runtime dependency manifest as a visible report section. The manifest remains machine-readable but hidden by default."
+    },
+    "handoff": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Optional durability metadata for HTML handoffs. Use repo-relative paths and commands so generated reports can be regenerated without leaking host-local paths.",
+      "properties": {
+        "sourcePath": {
+          "type": "string",
+          "description": "Repo-relative durable JSON input path used to regenerate the artifact."
+        },
+        "regenerationCommand": {
+          "type": "string",
+          "description": "Exact repo-root command that regenerates the artifact from sourcePath."
+        }
+      }
     },
     "intent": {
       "type": "object",

@@ -3,6 +3,7 @@
 ## Table of Contents
 
 - [Interaction Workflow](#interaction-workflow)
+- [Visual Language First](#visual-language-first)
 - [Output Mode Gate](#output-mode-gate)
 - [Plain-Text And Markdown Patterns](#plain-text-and-markdown-patterns)
 - [Pattern Selection](#pattern-selection)
@@ -22,12 +23,28 @@
 
 Use this workflow every time the skill loads:
 
-1. Treat loading as permission to run a communication-worthiness check, not as an obligation to emit HTML.
-2. Identify the reader need, decision frame, and smallest output mode that lowers decision cost.
+1. Treat loading as permission to run a communication-worthiness check, not as an obligation to emit HTML, except when the selected workflow expects an HTML handoff for material repo or skill changes.
+2. Identify the reader need, decision frame, and visual language that could reduce interaction time and information loss.
 3. Choose one primary pattern from [Plain-Text And Markdown Patterns](#plain-text-and-markdown-patterns) or [Pattern Selection](#pattern-selection). If no pattern fits, answer in ordinary chat or Markdown.
-4. Use the generator only for `html-artifact` mode. Start from the closest template when HTML is justified.
-5. Add rich sections only when the chosen pattern requires them. Do not add charts, Mermaid, code, diff, tabs, filters, claims, or controls just to make the response look richer or silence an advisory warning.
-6. Validate HTML artifacts and hand off the artifact link with validation status and any kept advisory warnings.
+4. Unless the chosen mode is intentionally `plain-brief`, commit to at least one visible visual structure: compact table, matrix, timeline, flow, cards, source-linked code/diff, or grouped evidence layout.
+5. Use the generator only for `html-artifact` mode. Start from the closest template when HTML is justified.
+6. Add rich sections only when the chosen pattern requires them. Do not add charts, Mermaid, code, diff, tabs, filters, claims, or controls just to make the response look richer or silence an advisory warning.
+7. Validate HTML artifacts and hand off the artifact link with validation status and any kept advisory warnings.
+
+## Visual Language First
+
+HTML handoff is a visual communication artifact, not Markdown wrapped in a browser. When the skill loads for a material report, organize the thinking around the visual shape before drafting the prose:
+
+- comparisons become matrices or side-by-side option cards;
+- process, routing, lifecycle, and failure paths become flows or timelines;
+- validation and risk become status tables or dashboards;
+- code and source evidence become source-linked tours, diffs, or evidence maps;
+- broad repo, module, or skill explainers become capability maps, structure trees, implementation flows, and source-linked tours;
+- long continuation state becomes grouped navigation with stable anchors.
+
+This is not a license to decorate. A visual structure is justified only when it reduces reader interaction time, information loss, or rework. If a visual idea does not change how quickly the user can understand, compare, verify, decide, or continue, use `plain-brief`, `structured-markdown`, or `visual-markdown` instead.
+
+Do not draft a linear handoff first and ask at the end whether it deserves visualization. Start by asking which relationship the reader needs to see: priority, sequence, ownership, dependency, contrast, evidence, state, risk, or next action. The output mode follows that information architecture.
 
 ## Default Session Routing
 
@@ -39,7 +56,7 @@ The skill loads only when clear complex communication would reduce the user's de
 | During work | The next useful user input depends on seeing options, blockers, file evidence, validation state, or a process map together. | The user only needs a concise status sentence before work continues. |
 | Final handoff | Material repo or skill behavior changed, validation evidence matters, or the final answer would become a long linear file list. | The work is tiny, self-evident, and has no durable evidence beyond one command result. |
 
-For material repo or skill changes, default to a structured handoff. Use plain text or Markdown when it can preserve the decision trail. Escalate to an `implementation-handoff` or `conclusion-dashboard` HTML artifact only when browser navigation, visualization, filtering, copy/export, or source browsing changes how quickly the user can understand, compare, verify, decide, or act.
+For material repo or skill changes, default to a validated `implementation-handoff` or `conclusion-dashboard` HTML artifact unless the user explicitly waives HTML or the work is tiny and has no durable evidence trail. Plain text or Markdown can still be used for interim status, but final material handoff should keep evidence, validation, risks, and next actions inspectable in the ignored local artifact.
 
 ## Output Mode Gate
 
@@ -63,20 +80,24 @@ Output modes:
 | `plain-brief` | A 200-500 Chinese-character answer needs BLUF, Top 3 support, and next action but no separate artifact. | Do not add tables or diagrams if a direct paragraph is faster. |
 | `structured-markdown` | Complex communication needs headings, bullets, compact tables, or evidence labels inside chat. | Do not create HTML when Markdown keeps the decision trail obvious. |
 | `visual-markdown` | The answer needs Mermaid, a decision matrix, command blocks, or source anchors but not browser controls. | Keep it readable in the chat transcript. |
-| `html-artifact` | Browser navigation, visualization, filtering, copy/export, option approval, structure browsing, or local interaction lowers decision cost. | Keep the page single-file, static, and disposable. |
+| `html-artifact` | Browser navigation, visualization, filtering, copy/export, option approval, structure browsing, local interaction, or material repo/skill handoff evidence lowers decision cost. | Keep the page single-file, static, and disposable. |
 
 Use the lower mode when in doubt.
+Once the skill loads, non-`plain-brief` outputs should not collapse back into linear prose. The minimum acceptable shape is one visible structure that lowers decision cost: a compact table, matrix, flow, timeline, source-linked evidence block, cards, or equivalent.
+For non-HTML rehearsals, fixtures, or smoke checks, run `scripts/check-mode-structure.mjs` so `structured-markdown` and `visual-markdown` outputs do not silently fall back to paragraph stacks.
 
 Hard HTML conditions:
 
 - More than 5 source anchors, files, findings, or citations need local navigation.
+- A repo or codebase explainer spans capabilities, structure, functions, implementation, architecture, and source evidence.
+- Material repo or skill behavior changed and the final handoff needs changed areas, evidence, validation, risks, and next actions.
 - The user must filter, sort, compare, copy, export, or return structured input.
 - Side-by-side options have enough dimensions that one compact Markdown table becomes hard to scan.
 - Architecture, workflow, timeline, dependency graph, milestone plan, module map, repo tree, or skill structure is too wide for one compact Mermaid diagram.
 - Multi-option approval or visual style approval needs a browsable gallery rather than a production UI.
 - A durable browser handoff is explicitly useful for review, acceptance, or continuation.
 
-HTML escalation is forbidden when one compact Markdown table, one Mermaid diagram, or one short file list is enough.
+HTML escalation is forbidden when one compact Markdown table, one Mermaid diagram, or one short file list is enough, except for material repo/skill handoffs where the workflow/advisory layer expects `html-artifact`.
 
 ## Plain-Text And Markdown Patterns
 
@@ -102,8 +123,9 @@ Use these Case-Derived Patterns as a routing and design checklist before choosin
 | `review-findings` | Review output has multiple findings, severities, evidence anchors, or action exports. | Sort by severity, show evidence beside findings, and make actions copyable. | Bug finding itself may belong to a review skill; this shapes the artifact. |
 | `pr-writeup` | The author needs a reviewer-facing artifact, not just findings. | Lead with motivation, before/after, file tour, review focus, test plan, and rollout notes. | Do not replace the code review skill; this is the author-side handoff. |
 | `module-map` | The user needs to understand a codebase area, architecture, trust boundary, or call path. | Show boxes/arrows, entry points, hot path, source anchors, and gotchas. | Use Mermaid or inline SVG only when the map is faster than prose. |
+| `repo-capability-map` | The user asks to understand a whole repository's capabilities, structure, functions, implementation, and source evidence. | Start with a capability/structure map, then provide file-role tables, implementation-flow drilldowns, evidence anchors, and gotchas. | Do not use for one-file explanations or routine summaries where a short Markdown answer is faster. |
 | `flow-drilldown` | A process, deploy path, incident path, request path, or state machine has steps and failure branches. | Show the route first, then step details, timings, failures, and owner/action metadata. | Avoid decorative diagrams without drilldown value. |
-| `explorable-explainer` | A concept or feature is easier to learn by toggling parameters, comparing examples, or seeing a live model. | Keep a readable TL;DR, then add controls, examples, glossary, and citations. | The page must still make sense without interaction or CDN runtime success. |
+| `explorable-explainer` | A concept or feature is easier to learn by comparing adjacent terms, toggling parameters, inspecting examples, or seeing a live model. | Keep a readable TL;DR, then add definition cards, adjacent-concept boundaries, avoid/use-instead notes, usage scenarios, examples, glossary, and citations. | The page must still make sense without interaction or CDN runtime success. Do not copy external glossary text into the artifact. |
 | `status-dashboard` | Recurring status, release, or milestone work needs quick scanning. | Use metric cards, timeline, risk/follow-up table, and owner/status filters only when useful. | Do not invent unsourced metrics or hide slipped work. |
 | `incident-report` | The user needs impact, timeline, root cause, mitigations, and follow-ups in one place. | Keep times concrete, facts/inferences separated, and actions owner-linked. | Do not overstate root cause if evidence is incomplete. |
 | `disposable-export-editor` | The user needs to sort, triage, toggle, tune, or fill a small structured decision surface. | Every editor-like artifact must end with an export path: Markdown, JSON, diff, or checklist text in a visible fallback. | Never write files, call network APIs, store secrets, or mutate third-party resources from the page. |
@@ -125,7 +147,7 @@ Use the closest asset and delete sections that do not apply:
 | `assets/templates/conclusion-dashboard.html` | A non-trivial task is complete and the user needs the conclusion, files, verification, and next actions in one place. | conclusion strip, metric cards, timeline, file evidence, highlighted snippet, Mermaid/SVG diagram slot |
 | `assets/templates/implementation-plan.html` | Implementation planning needs milestones, dependencies, acceptance gates, risks, and owner/action alignment. | plan summary, milestone timeline, dependency diagram, gate table, open questions |
 | `assets/templates/review-findings.html` | A PR/code/doc review has multiple findings, severity levels, or reviewer focus areas. | severity filters, finding cards, annotated code panel, file tour, action export |
-| `assets/templates/research-explainer.html` | Research, architecture, or module understanding needs citations, diagrams, examples, and a glossary. | TL;DR grid, rendered rich-text sections, tabbed examples, diagram panel, source rail |
+| `assets/templates/research-explainer.html` | Research, architecture, module understanding, or local vocabulary explanation needs citations, diagrams, examples, and a glossary. | TL;DR grid, definition/boundary cards, rendered rich-text sections, tabbed examples, diagram panel, source rail |
 | `assets/templates/decision-matrix.html` | Multiple options, product choices, or implementation approaches need trade-off comparison. | option cards, recommendation, risk notes, confirmation questions |
 | `assets/templates/visual-exploration.html` | Visual directions, design-system references, component variants, or SVG illustration options need inspection before approval. | artboards, token chips, variant grid, rationale, risk notes |
 | `assets/templates/editor-workbench.html` | A small local triage, feature-flag, or prompt-tuning surface needs visible text export. | filters/toggles, preview panel, export area, copy controls, no persistence |
@@ -133,6 +155,8 @@ Use the closest asset and delete sections that do not apply:
 | `assets/components/interaction-ui.js` | A custom page needs simple interactions. | filters, tabs, search, copy/export buttons, evidence spotlight, data-table row/column hover, selected-state focus |
 | `assets/components/rich-render-runtime.css` | An artifact needs runtime-rendered Markdown, Mermaid, or highlighted code. | rendered Markdown styling, Mermaid fallback styling, highlight token affordances |
 | `assets/components/rich-render-runtime.js` | An artifact needs runtime-rendered Markdown, Mermaid, or highlighted code. | Marked + DOMPurify bridge, per-diagram Mermaid `render`, highlight.js tokenization, status badges |
+
+For Harness Hub vocabulary explainers, use `docs/harness-vocabulary.md` as the local term source. Keep definitions local-original, show adjacent-concept contrasts, and cite glossary-like upstream repositories only as structure inspiration.
 
 ## Static Component Boundary
 
@@ -182,6 +206,25 @@ Add richer sections only when they shorten the explanation:
 ```
 
 Supported section types: `summary-cards`, `data-table`, `markdown`, `mermaid`, `code`, `diff`, `timeline`, `evidence`, `decision-matrix`, `actions`, `tabs`, `filterable-cards`, and `chart`. Optional section fields `group`, `priority`, `summary`, `status`, `richId`, and `trustLevel` drive grouped navigation, runtime state, and sanitization. Optional root fields `intent`, `claims`, `evidence`, `verification`, and `nextActions` are rendered only when useful or non-empty.
+
+### Handoff Durability
+
+Generated HTML under `skills/effective-interact/artifacts/` is a disposable inspection output. It can disappear when a fresh Codex worktree is created, ignored files are cleaned, or local state is reset. For any report the user is expected to reopen later, keep the JSON input in a durable source location such as `skills/effective-interact/assets/fixtures/` when the content is safe to track, or another approved tracked path owned by the task. If the content is private or unsuitable for tracking, record the regeneration command in `.harness-hub/state/session-handoff.md` and the final response.
+
+Before final handoff:
+
+- Check that the generated HTML still exists at the path you plan to share.
+- Regenerate from the durable JSON source if the file is missing.
+- Include the regeneration command beside the artifact path when continuity matters.
+- Do not cite an ignored HTML file as the only durable deliverable.
+
+For Codex in-app browser review, prefer a localhost URL over a raw `file://` path. Use:
+
+```powershell
+node skills/effective-interact/scripts/serve-artifact.mjs skills/effective-interact/artifacts/report.html --host 127.0.0.1 --port 4173 --json
+```
+
+The helper serves only the selected artifact, not the whole workspace. Open or hand off the returned `http://127.0.0.1:<port>/...` URL after validating the artifact with `validate-interaction.mjs --require-browser`.
 
 ## Long Task Session Ledger
 
@@ -362,9 +405,10 @@ Generator and validator scripts are internal `effective-interact` assets. Do not
 | Planning | timeline + risk matrix + dependency sketch | filter by owner, copy checklist |
 | Code review | source-linked code evidence + annotated diff + file tour + severity index | jump links, collapse low-risk notes |
 | Code understanding | module boxes + arrows + entry point list | highlight hot path |
+| Repository capability explainer | capability map + structure tree + implementation flow + source anchors | group by surface, jump to source evidence |
 | Design reference | swatches + type scale + component contact sheet | copy token, state tabs |
 | Decision prototype | isolated interaction or animation inside the artifact | sliders, toggles, reset, visible export |
-| Research | TL;DR + tabs + glossary + citations | search, expand all |
+| Research | TL;DR + definition/boundary cards + tabs + glossary + citations | search, expand all |
 | Status update | summary cards + chart + timeline | filter by status |
 | Incident timeline | minute-by-minute timeline + logs + follow-ups | severity tags, owner filters |
 | Custom editor | board/form/table for a specific decision | export Markdown/JSON/diff |
@@ -399,12 +443,12 @@ The validator emits non-blocking rich-content opportunity warnings when it sees 
 
 ## Runtime Rendering Support
 
-Use `runtime-cdn` as the default Codex-visible artifact path. It keeps the artifact as one static HTML file, but lets the browser use pinned libraries for rich rendering. Use `pre-rendered` only when primary rich content must not depend on CDN scripts. Use `fallback-only` only for constrained environments where readable source is acceptable.
+Use `pre-rendered` as the default handoff artifact path. It keeps Markdown and code rendering deterministic and avoids browser/CDN dependency for primary content. Use `runtime-cdn` only when browser-required validation is available and dynamic rich rendering is worth the tradeoff. Use `fallback-only` only for constrained environments where readable source is acceptable.
 
 Render modes:
 
-- `runtime-cdn` is the default. It declares pinned runtime dependencies in a hidden machine-readable manifest, keeps hidden source fallback data, and exposes ready/degraded/failed state through attributes rather than visible effect tags. Set `showRuntimeDependencies: true` only when dependency loading is part of the artifact.
-- `pre-rendered` is explicit. Critical CSS/JS is inlined, Markdown becomes semantic HTML, Mermaid should become real inline SVG, and code gets static highlight spans. If Mermaid cannot render, do not treat the fallback as a successful diagram.
+- `pre-rendered` is the default. Critical CSS/JS is inlined, Markdown becomes semantic HTML, Mermaid should become real inline SVG, and code gets static highlight spans. If Mermaid cannot render, do not treat the fallback as a successful diagram.
+- `runtime-cdn` is explicit. It declares pinned runtime dependencies in a hidden machine-readable manifest, keeps hidden source fallback data, and exposes ready/degraded/failed state through attributes rather than visible effect tags. Set `showRuntimeDependencies: true` only when dependency loading is part of the artifact. Browser-required validation must pass before handoff.
 - `fallback-only` is explicit degraded output. It keeps source text readable without claiming rich rendering success.
 - `runtime` is a legacy alias accepted by the generator and normalized to `runtime-cdn`.
 
@@ -484,8 +528,11 @@ Run `scripts/validate-interaction.mjs` on generated or custom HTML before handof
 - code highlight markup, language classes, line wrappers, and inert file path labels
 - evidence, verification status, filter, tab, and copy controls only when the artifact contains those optional modules
 - browser checks across narrow, medium, and desktop viewports for body overflow, major overlap, Mermaid containment, code tokens, chart containment, visible focus, reduced-motion CSS, primary conclusion visibility, and control state changes
+- advisory visual-structure gate for HTML reports that still read like linear prose even though the skill was loaded
 
 If Playwright/Chrome is unavailable, browser-only coverage must be reported as `degraded`; with `--require-browser`, validation must fail instead of silently claiming browser checks passed.
+
+For non-HTML mode rehearsals or executable fixtures, run `scripts/check-mode-structure.mjs`. It is advisory-only and checks whether `structured-markdown` and `visual-markdown` still expose visible structure instead of linear prose.
 
 Security rules are generator defaults, not optional polish:
 
